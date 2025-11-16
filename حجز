@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>التحضير الإلكتروني</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="نموذج لطلب التحضير والحقائب التعليمية مع خدمة التوصيل لجميع محافظات الأردن." />
+
+  <!-- Open Graph Meta Tags for Facebook -->
+  <meta property="og:title" content="طلب التحضير الإلكتروني" />
+  <meta property="og:description" content="اطلبي التحضير والحقائب التعليمية مع خدمة التوصيل لجميع محافظات الأردن عبر نموذج التحضير الإلكتروني." />
+  <meta property="og:image" content="https://i.ibb.co/6n8J7yT/education-logo.png" />
+  <meta property="og:image:width" content="300" />
+  <meta property="og:image:height" content="300" />
+  <meta property="og:url" content="https://yourusername.github.io/electronic-prep" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="التحضير الإلكتروني" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Tahoma, sans-serif;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at top left, rgba(255, 215, 128, 0.35), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(106, 53, 255, 0.25), transparent 55%),
+        #f5f0ff;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      min-height: 100vh;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      background: rgba(246, 245, 255, 0.95);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      position: relative;
+      backdrop-filter: blur(6px);
+    }
+
+    header {
+      background: #6a35ff;
+      color: #fff;
+      text-align: center;
+      padding: 10px 12px 16px;
+    }
+
+    .logo-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .logo-wrapper img {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: #ffffff;
+      padding: 4px;
+      border: 2px solid #fff;
+    }
+
+    .logo-fallback {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #6a35ff, #8a5cff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #fff;
+      border: 2px solid #fff;
+    }
+
+    .logo-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    main {
+      padding: 16px 14px 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 16px 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: #222;
+      font-size: 15px;
+    }
+
+    .section-title span.badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: #6a35ff;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    .row:last-child {
+      margin-bottom: 0;
+    }
+
+    .qty-control {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      background: #f3f2ff;
+      border: 1px solid #e0ddff;
+      overflow: hidden;
+    }
+
+    .qty-btn {
+      border: none;
+      padding: 6px 10px;
+      font-size: 16px;
+      background: transparent;
+      cursor: pointer;
+      min-width: 32px;
+    }
+
+    .qty-btn:active {
+      background: #e3ddff;
+    }
+
+    .qty-value {
+      min-width: 30px;
+      text-align: center;
+      font-size: 15px;
+      padding: 4px 8px;
+      background: #ffffff;
+      border-left: 1px solid #e0ddff;
+      border-right: 1px solid #e0ddff;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      margin-top: 4px;
+      margin-bottom: 4px;
+      color: #444;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid #ddd9ff;
+      font-size: 13px;
+      outline: none;
+      background: #fcfbff;
+    }
+
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #a7a2c7;
+      font-size: 12px;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 11px 12px;
+      font-size: 15px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: #6a35ff;
+      color: #fff;
+    }
+
+    .btn-primary:active {
+      background: #5527dd;
+    }
+
+    .btn-secondary {
+      background: #ffffff;
+      color: #6a35ff;
+      border: 1px solid #d2caff;
+    }
+
+    .btn-secondary:active {
+      background: #f1ecff;
+    }
+
+    .center-card {
+      text-align: center;
+      padding: 26px 18px 18px;
+    }
+
+    .status-icon {
+      width: 68px;
+      height: 68px;
+      border-radius: 999px;
+      background: #24c060;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 14px;
+      color: #fff;
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .title-lg {
+      font-size: 20px;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: #222;
+    }
+
+    .text-muted {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    .order-id {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #444;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .btn-row .btn-primary,
+    .btn-row .btn-secondary {
+      margin-top: 0;
+      flex: 1;
+    }
+
+    .timeline {
+      display: flex;
+      margin-top: 14px;
+    }
+
+    .timeline-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-left: 10px;
+      margin-right: 12px;
+    }
+
+    .tl-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid #d0cbee;
+      background: #fff;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .tl-dot.done {
+      background: #6a35ff;
+      border-color: #6a35ff;
+    }
+
+    .tl-dot.done::after {
+      content: "✓";
+      position: absolute;
+      inset: -1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+    }
+
+    .tl-line {
+      width: 2px;
+      flex: 1;
+      background: linear-gradient(to bottom, #d0cbee 0, #d0cbee 50%, transparent 100%);
+      margin-bottom: 12px;
+    }
+
+    .timeline-steps {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .timeline-steps p {
+      margin-bottom: 14px;
+      color: #555;
+    }
+
+    .timeline-steps p.current {
+      color: #6a35ff;
+      font-weight: 600;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .support-note {
+      font-size: 12px;
+      color: #888;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .summary-row span.value {
+      font-weight: 700;
+      color: #6a35ff;
+    }
+
+    input.required-error,
+    textarea.required-error {
+      border-color: #ff4d4f !important;
+      box-shadow: 0 0 0 1px #ffb3b3;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed #ddd9ff;
+      margin: 8px 0;
+    }
+
+    .error-box {
+      background: #ffe8e8;
+      border: 1px solid #ffb3b3;
+      color: #b10000;
+      padding: 8px 10px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .error-box.hidden {
+      display: none;
+    }
+
+    .error-icon {
+      margin-top: 2px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo-wrapper">
+        <div class="logo-fallback">📚</div>
+        <div class="logo-title">التحضير الإلكتروني</div>
+      </div>
+    </header>
+
+    <main>
+      <!-- باقي الكود كما هو -->
+      <section id="screen-main" class="screen active">
+        <!-- محتوى النموذج -->
+      </section>
+
+      <section id="screen-confirm" class="screen">
+        <!-- تأكيد الطلب -->
+      </section>
+
+      <section id="screen-track" class="screen">
+        <!-- متابعة الطلب -->
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // الكود JavaScript كما هو
+  </script>
+</body>
+</html>
