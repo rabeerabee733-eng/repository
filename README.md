@@ -11,16 +11,22 @@ Independent Arabic medicine catalog with product reference photos, search, Whats
 - Displayed prices come from the supplied list and require supplier confirmation.
 - This dedicated branch deploys to a separate Render static site; unrelated branches are not used.
 
-## Pharmacy orders and invoices
+## Pharmacy orders and PDF sharing
 
-The cart requires pharmacy name and address before invoice creation or WhatsApp handoff. Optional city, phone, contact and notes accompany the order. WhatsApp is a user-operated handoff; it does not send automatically or attach PDF files. Long orders split into numbered messages.
+The cart requires pharmacy name and address. A single preparation action snapshots the order and opens its invoice, where PDF is automatically generated. Optional city, phone, contact and notes accompany the order. The PDF is retained in memory as a File, allowing the Share button to invoke Web Share immediately during user activation. On compatible devices the user chooses WhatsApp and the warehouse contact. A share API resolution is never represented as delivery confirmation.
 
-An invoice snapshots items, quantities and prices and receives a unique identifier. Download generates an A4 PDF locally with Arabic/English item names and blank receipt/signature spaces. The print view also supports paper signatures. Edit order creates a new invoice at current catalog prices and retains the old invoice; prior signatures never carry to the revision.
+The fixed-recipient WhatsApp link addresses +963967765704 and contains the pharmacy details, invoice ID, items and quantities. It supports numbered parts for long orders. A wa.me link does not attach PDF. When file sharing is unsupported, download PDF and attach it in WhatsApp, or use the print dialog to save it.
 
-`invoice.html` lists up to 30 invoices stored in this browser's localStorage. Pharmacy/cart draft details use sessionStorage. Clearing browser data removes the local archive. Invoices do not synchronize across devices and cannot be retrieved from an invoice URL alone on another device. Download/share PDF to retain a copy. There is no shared warehouse archive, server-side order registration, login, payment processing, signature identity verification or delivery-status verification.
+There is no automatic WhatsApp Business integration or backend in this static site. Merely filling the form does not transmit an order. A sender account/API setup and backend would be needed for automatic server-side messaging and document delivery. No API credentials belong in this public site.
 
-At delivery, each person can enter their name and draw in their own signature field, then save and download again. Receipt date is required when receipt details are filled. Changing receipt names clears the corresponding signature; date/notes changes clear both. These are locally entered marks, not cryptographically verified signatures. Receipt fields remain empty until entered by the user.
+## Paper receipt
+
+Invoice HTML and PDF always contain blank paper lines for delivery date, receiving notes, warehouse and pharmacy representative names, signatures and stamps. No signature canvas, electronic receipt entry or save-signature control exists. Previously stored electronic receipt data is retained in old local records but is ignored by the display and PDF generator. Signatures are written with a pen after printing.
+
+## Local records
+
+`invoice.html` lists up to 30 invoice snapshots in localStorage. Draft pharmacy/cart details use sessionStorage. Records do not synchronize between devices; clearing browser data removes them. Editing an order creates a new invoice at current catalog prices and retains the old one. All prices are provisional and require supplier confirmation. There is no payment processing or confirmation of delivery.
 
 ## QA
 
-Automated checks cover catalog/search, cart eligibility and quantities, totals, pharmacy validation, immutable invoice snapshots, revision signatures, storage capacity/failure, receipt field validation, encoded WhatsApp message limits and PDF byte offsets. Manual UI checks use dummy data only and do not send messages to the warehouse. PDF layout was rendered independently with the production PDF generator for a single-page order and a 219-item order; fonts and pagination were inspected. Cloud browser policy blocks blob URL navigation, so its download automation cannot validate that final browser-specific save action. The generated PDF link and print fallback remain available.
+`node verify.mjs && node cart.test.mjs && node --check dist/app.js && node --check dist/invoice.js` validates catalog search, cart eligibility, quantity bounds, totals, pharmacy validation, snapshots, local storage, WhatsApp message encoding/recipient, PDF structure, paper-only receipt rendering and file-share capability fallbacks. Manual testing uses dummy local data and does not send warehouse messages. The production PDF generator was rendered independently for a single-page and a 219-item order. Cloud browser automation does not provide native file sharing; its unsupported-device fallback was checked. Blob navigation is blocked by its browser policy, so final download/native-share execution requires a supporting user browser.

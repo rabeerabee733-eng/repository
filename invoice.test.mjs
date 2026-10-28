@@ -27,3 +27,17 @@ assert.throws(()=>saveInvoice(a,{getItem(){return null},setItem(){throw Error('q
 assert.deepEqual(receiptErrors({}),[]);assert(receiptErrors({warehouseName:'test'}).length);const signature='data:image/png;base64,iVBORw0KGgo=';assert(receiptErrors({date:'2026-10-28',warehouseSignature:signature}).length);assert.deepEqual(receiptErrors({date:'2026-10-28',warehouseName:'test',warehouseSignature:signature}),[]);assert.match(receiptStatus({date:'2026-10-28',warehouseName:'test',pharmacyName:'test',warehouseSignature:signature,pharmacySignature:signature}),/توقيعان/);
 const bytes=buildImagePdf([{width:1,height:1,bytes:new Uint8Array([255,216,255,217])}]);const pdf=Buffer.from(bytes).toString('latin1');assert(pdf.startsWith('%PDF-1.4'));const start=Number(pdf.match(/startxref\n(\d+)/)[1]);assert.equal(pdf.slice(start,start+4),'xref');const offsets=[...pdf.matchAll(/(\d{10}) 00000 n/g)].map(x=>Number(x[1]));for(let i=0;i<offsets.length;i++)assert(pdf.slice(offsets[i]).startsWith(`${i+1} 0 obj`));
 console.log('PASS: pharmacy validation, immutable invoice snapshots/revisions, local storage/quota, receipt validation, PDF structure and long WhatsApp orders.');
+
+// Paper receipts must never expose previously saved electronic signatures.
+const {invoicePdf}=await import('./dist/invoice-pdf.mjs');
+const {invoiceWhatsAppParts,invoiceShareText,canShareInvoiceFile}=await import('./dist/invoice-share.mjs');
+const drawn=[];let imageDraws=0;
+const ctx={fillRect(){},strokeRect(){},beginPath(){},moveTo(){},lineTo(){},stroke(){},fillText(s){drawn.push(String(s))},measureText(s){return{width:String(s).length*12}},drawImage(){imageDraws++}};
+const previousDocument=globalThis.document;
+globalThis.document={createElement(){return{getContext(){return ctx},toDataURL(){return'data:image/jpeg;base64,/9j/2Q=='}}}};
+const legacy={...a,receipt:{warehouseName:'OLD_WAREHOUSE',pharmacyName:'OLD_PHARMACY',warehouseSignature:signature,pharmacySignature:signature,date:'1999-01-01',notes:'OLD_RECEIPT'}};
+try{const blob=await invoicePdf(legacy);assert.equal(blob.type,'application/pdf');assert(blob.size>100);assert.equal(imageDraws,0);assert(!drawn.some(s=>/OLD_|1999-01-01/.test(s)));assert.equal(drawn.filter(s=>s==='التوقيع بالقلم:').length,2);}finally{if(previousDocument===undefined)delete globalThis.document;else globalThis.document=previousDocument;}
+const invoiceParts=invoiceWhatsAppParts(a);assert(invoiceParts.every(p=>new URL(p.url).pathname==='/963967765704'));assert(invoiceParts[0].text.includes(a.id));assert(invoiceShareText(a).includes(a.pharmacy.address));assert(invoiceShareText(a).includes('PDF'));assert(!invoiceShareText(a).includes('OLD_'));
+const dummyFile={name:a.id+'.pdf',type:'application/pdf'};
+assert(!canShareInvoiceFile(dummyFile,{}));assert(!canShareInvoiceFile(dummyFile,{share(){},canShare(){throw Error('blocked')}}));assert(!canShareInvoiceFile(dummyFile,{share(){},canShare:()=>false}));assert(canShareInvoiceFile(dummyFile,{share(){},canShare:data=>data.files[0]===dummyFile}));
+console.log('PASS: paper-only receipt PDF ignores legacy ink and names; fixed WhatsApp recipient; file-share capability and fallback.');
