@@ -1,4 +1,4 @@
-import {buildWhatsAppParts} from './cart.mjs';
+import {buildWhatsAppParts} from './cart.mjs?v=20261028-packs-2';
 export function invoiceWhatsAppParts(invoice){return buildWhatsAppParts(Object.fromEntries(invoice.items.map(p=>[p.id,p.qty])),invoice.items.map(p=>({...p,price:p.unitPrice})),{pharmacy:invoice.pharmacy,invoiceId:invoice.id});}
 export function invoiceShareText(invoice){return `طلب صيدلية إلى مستودع العاصمة\nرقم المستودع: +963967765704\nرقم الفاتورة: ${invoice.id}\nالصيدلية: ${invoice.pharmacy.name}\nالعنوان: ${[invoice.pharmacy.city,invoice.pharmacy.address].filter(Boolean).join(' - ')}\n${invoice.items.length} صنف / ${invoice.count} عبوة\nالإجمالي التقديري: ${new Intl.NumberFormat('en-US').format(invoice.total)} ل.س\nتفاصيل الأصناف والكميات في ملف PDF المرفق. يرجى تأكيد الأسعار والتوفر.\nالتوقيع بالقلم على النسخة المطبوعة عند الاستلام.`;}
 export function canShareInvoiceFile(file,nav=globalThis.navigator){try{return !!file&&typeof nav?.share==='function'&&typeof nav?.canShare==='function'&&nav.canShare({files:[file]});}catch{return false;}}

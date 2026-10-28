@@ -1,8 +1,8 @@
 (async()=>{
-const {filterProducts}=await import('./core.mjs');
-const {canOrder,normalizeCart,cartSummary,setCartQuantity}=await import('./cart.mjs');
-const {normalizePharmacy,createInvoice}=await import('./invoice-core.mjs');
-const {readInvoices,saveInvoice}=await import('./invoice-store.mjs');
+const {filterProducts}=await import('./core.mjs?v=20261028-packs-2');
+const {canOrder,normalizeCart,cartSummary,setCartQuantity}=await import('./cart.mjs?v=20261028-packs-2');
+const {normalizePharmacy,createInvoice}=await import('./invoice-core.mjs?v=20261028-packs-2');
+const {readInvoices,saveInvoice}=await import('./invoice-store.mjs?v=20261028-packs-2');
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const icons={other:'<path d="M3 6h18v15H3zM2 3h20v3H2zM9 10h6"/>',all:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',tablets:'<rect x="6" y="2" width="12" height="20" rx="6" transform="rotate(40 12 12)"/><path d="m7 8 9 8"/>',supplements:'<path d="M8 6V3h8v3M6 9h12v12H6zM8 6h8v3H8zM9 14h6m-3-3v6"/>',liquids:'<path d="M9 3h6v5H9zM9 8 6 12v9h12v-9l-3-4M6 15h12"/>',care:'<path d="M5 3h14l-3 15H8zM8 18h8v4H8zM7 7h10"/>',injections:'<path d="m4 20 4-4m-1-4 5-5 5 5-5 5zM12 7l2-2m3 7 2-2M12 3l9 9M3 21l1-1m5-7 2 2"/>',nutrition:'<path d="M6 4h12v18H6zM6 8h12M8 1h8v3M9 13h6v5H9z"/>'};
 const cats={all:'جميع المنتجات',tablets:'أقراص وكبسولات',supplements:'فيتامينات ومكملات',liquids:'شراب وقطرات',care:'كريمات وعناية',injections:'حقن ومشافي',nutrition:'حليب وتغذية',other:'منتجات أخرى'};

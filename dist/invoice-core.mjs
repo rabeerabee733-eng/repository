@@ -1,4 +1,4 @@
-import {cartSummary,UNLISTED_IDS} from './cart.mjs';
+import {cartSummary,UNLISTED_IDS} from './cart.mjs?v=20261028-packs-2';
 export const PROFILE_LIMITS={name:80,address:180,city:60,phone:30,contact:80,notes:240};
 const clean=(v,n)=>String(v??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').trim().slice(0,n);
 export function normalizePharmacy(raw={}){return Object.fromEntries(Object.entries(PROFILE_LIMITS).map(([k,n])=>[k,clean(raw?.[k],n)]));}

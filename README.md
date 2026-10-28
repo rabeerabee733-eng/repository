@@ -36,3 +36,5 @@ Invoice HTML and PDF always contain blank paper lines for delivery date, receivi
 Every eligible product has a zero-to-99 pack counter with plus/minus controls in both the card and detail dialog. Updates synchronize in place with the basket and its total; reducing a count to zero removes the item. The basket bar remains visible even when empty and respects the mobile safe area. The basket dialog keeps its close control and total/checkout action visible while the item list and pharmacy form scroll. Draft pharmacy fields survive quantity changes.
 
 The invoice handoff displays two clear actions: open the order directly in the warehouse WhatsApp conversation, and share or download the PDF attachment. Browser file sharing still requires the user to choose the WhatsApp recipient. Direct automatic PDF attachment to a preset WhatsApp chat is not implemented without a messaging service integration.
+
+Static scripts/styles and relative module imports carry an asset version. Bump that version together for future frontend releases so an older cached script cannot run against newer HTML.
