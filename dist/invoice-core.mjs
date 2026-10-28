@@ -1,4 +1,4 @@
-import {cartSummary,UNLISTED_IDS} from './cart.mjs?v=20261028-packs-2';
+import {cartSummary,UNLISTED_IDS} from './cart.mjs?v=20261028-checkout-1';
 export const PROFILE_LIMITS={name:80,address:180,city:60,phone:30,contact:80,notes:240};
 const clean=(v,n)=>String(v??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').trim().slice(0,n);
 export function normalizePharmacy(raw={}){return Object.fromEntries(Object.entries(PROFILE_LIMITS).map(([k,n])=>[k,clean(raw?.[k],n)]));}
@@ -9,3 +9,4 @@ export function cleanReceipt(raw={}){const signature=v=>typeof v==='string'&&v.l
 export function receiptErrors(raw){const r=cleanReceipt(raw);const any=r.warehouseName||r.pharmacyName||r.date||r.notes||r.warehouseSignature||r.pharmacySignature;if(!any)return[];return[r.date?'':'حدد تاريخ التسليم.',r.warehouseSignature&&!r.warehouseName?'أدخل اسم ممثل المستودع.':'',r.pharmacySignature&&!r.pharmacyName?'أدخل اسم مستلم الصيدلية.':''].filter(Boolean);}
 export function receiptStatus(raw){const r=cleanReceipt(raw);if(r.warehouseSignature&&r.pharmacySignature&&r.warehouseName&&r.pharmacyName&&r.date)return'توقيعان محفوظان على الجهاز';if(r.warehouseSignature||r.pharmacySignature)return'توقيع واحد محفوظ';return'بانتظار التوقيع عند التسليم';}
 export const invoiceDate=iso=>new Intl.DateTimeFormat('ar-SY',{timeZone:'Asia/Damascus',dateStyle:'medium',timeStyle:'short'}).format(new Date(iso));
+export function normalizeOrderPharmacy(raw={}){return normalizePharmacy({name:raw?.name,address:raw?.address});}

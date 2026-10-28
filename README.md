@@ -13,7 +13,9 @@ Independent Arabic medicine catalog with product reference photos, search, Whats
 
 ## Pharmacy orders and PDF sharing
 
-The cart requires pharmacy name and address. A single preparation action snapshots the order and opens its invoice, where PDF is automatically generated. Optional city, phone, contact and notes accompany the order. The PDF is retained in memory as a File, allowing the Share button to invoke Web Share immediately during user activation. On compatible devices the user chooses WhatsApp and the warehouse contact. A share API resolution is never represented as delivery confirmation.
+The cart asks for only pharmacy name and address in a compact form directly below the scrollable product list. The fixed “إرسال إلى المستودع” action first saves an invoice snapshot, then opens the warehouse WhatsApp draft in a new tab and navigates the original tab to the invoice/PDF page. The user confirms sending in WhatsApp. Old optional city, phone, contact and notes are excluded from newly submitted orders; historical invoices remain unchanged. If a popup is blocked, the invoice page retains the direct WhatsApp links and PDF controls. If local invoice saving fails, no WhatsApp handoff occurs.
+
+The PDF is retained in memory as a File, allowing the Share button to invoke Web Share immediately during user activation. On compatible devices the user chooses WhatsApp and the warehouse contact. A share API resolution is never represented as delivery confirmation.
 
 The fixed-recipient WhatsApp link addresses +963967765704 and contains the pharmacy details, invoice ID, items and quantities. It supports numbered parts for long orders. A wa.me link does not attach PDF. When file sharing is unsupported, download PDF and attach it in WhatsApp, or use the print dialog to save it.
 
@@ -33,7 +35,7 @@ Invoice HTML and PDF always contain blank paper lines for delivery date, receivi
 
 ## Pack controls and mobile basket
 
-Every eligible product has a zero-to-99 pack counter with plus/minus controls in both the card and detail dialog. Updates synchronize in place with the basket and its total; reducing a count to zero removes the item. The basket bar remains visible even when empty and respects the mobile safe area. The basket dialog keeps its close control and total/checkout action visible while the item list and pharmacy form scroll. Draft pharmacy fields survive quantity changes.
+Every eligible product has a zero-to-99 pack counter with plus/minus controls in both the card and detail dialog. Updates synchronize in place with the basket and its total; reducing a count to zero removes the item. The basket bar remains visible even when empty and respects the mobile safe area. The basket dialog keeps its close control and total/checkout action visible. Its product list has a bounded scroll region so the two-field pharmacy form remains easy to reach below the products, including with long orders. Draft pharmacy fields survive quantity changes.
 
 The invoice handoff displays two clear actions: open the order directly in the warehouse WhatsApp conversation, and share or download the PDF attachment. Browser file sharing still requires the user to choose the WhatsApp recipient. Direct automatic PDF attachment to a preset WhatsApp chat is not implemented without a messaging service integration.
 

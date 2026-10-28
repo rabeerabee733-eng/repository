@@ -1,7 +1,7 @@
-import {readInvoices,deleteInvoice} from './invoice-store.mjs?v=20261028-packs-2';
-import {invoiceDate} from './invoice-core.mjs?v=20261028-packs-2';
-import {invoicePdf} from './invoice-pdf.mjs?v=20261028-packs-2';
-import {invoiceWhatsAppParts,invoiceShareText,canShareInvoiceFile} from './invoice-share.mjs?v=20261028-packs-2';
+import {readInvoices,deleteInvoice} from './invoice-store.mjs?v=20261028-checkout-1';
+import {invoiceDate} from './invoice-core.mjs?v=20261028-checkout-1';
+import {invoicePdf} from './invoice-pdf.mjs?v=20261028-checkout-1';
+import {invoiceWhatsAppParts,invoiceShareText,canShareInvoiceFile} from './invoice-share.mjs?v=20261028-checkout-1';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>new Intl.NumberFormat('en-US').format(n);

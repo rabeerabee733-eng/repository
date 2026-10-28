@@ -41,3 +41,14 @@ const invoiceParts=invoiceWhatsAppParts(a);assert(invoiceParts.every(p=>new URL(
 const dummyFile={name:a.id+'.pdf',type:'application/pdf'};
 assert(!canShareInvoiceFile(dummyFile,{}));assert(!canShareInvoiceFile(dummyFile,{share(){},canShare(){throw Error('blocked')}}));assert(!canShareInvoiceFile(dummyFile,{share(){},canShare:()=>false}));assert(canShareInvoiceFile(dummyFile,{share(){},canShare:data=>data.files[0]===dummyFile}));
 console.log('PASS: paper-only receipt PDF ignores legacy ink and names; fixed WhatsApp recipient; file-share capability and fallback.');
+
+const {normalizeOrderPharmacy}=await import('./dist/invoice-core.mjs');
+const {handoffWarehouseOrder}=await import('./dist/invoice-share.mjs');
+const minimal=normalizeOrderPharmacy({name:' صيدلية اختبار ',address:' شارع اختبار ',city:'old city',phone:'old phone',contact:'old contact',notes:'old notes'});
+assert.equal(minimal.name,'صيدلية اختبار');assert.equal(minimal.address,'شارع اختبار');for(const field of ['city','phone','contact','notes'])assert.equal(minimal[field],'');
+const order=createInvoice({[first.id]:1},products,minimal);const events=[];
+handoffWarehouseOrder(order,{save:i=>events.push(['save',i.id]),open:(url,target,features)=>events.push(['open',url,target,features]),navigate:url=>events.push(['navigate',url])});
+assert.deepEqual(events.map(e=>e[0]),['save','open','navigate']);assert.equal(new URL(events[1][1]).pathname,'/963967765704');assert.equal(events[1][2],'_blank');assert(events[1][3].includes('noopener'));assert.equal(events[2][1],'invoice.html#'+order.id);
+let fallback='';handoffWarehouseOrder(order,{save(){},open(){throw Error('popup blocked')},navigate:url=>fallback=url});assert.equal(fallback,'invoice.html#'+order.id);
+let externalCalls=0;assert.throws(()=>handoffWarehouseOrder(order,{save(){throw Error('storage full')},open(){externalCalls++},navigate(){externalCalls++}}),/storage full/);assert.equal(externalCalls,0);
+console.log('PASS: two-field pharmacy data, invoice save before WhatsApp handoff, preset recipient, popup fallback and no transmission on storage failure.');

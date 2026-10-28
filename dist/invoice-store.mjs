@@ -1,4 +1,4 @@
-import {validateInvoice,normalizePharmacy,cleanReceipt} from './invoice-core.mjs?v=20261028-packs-2';
+import {validateInvoice,normalizePharmacy,cleanReceipt} from './invoice-core.mjs?v=20261028-checkout-1';
 const KEY='asima-invoices-v1';
 export function readInvoices(storage){try{const data=JSON.parse((storage||localStorage).getItem(KEY)||'[]');return Array.isArray(data)?data.filter(validateInvoice).map(x=>({...x,pharmacy:normalizePharmacy(x.pharmacy),receipt:cleanReceipt(x.receipt)})):[];}catch{return[];}}
 export function saveInvoice(invoice,storage){if(!validateInvoice(invoice))throw Error('بيانات الفاتورة غير صالحة.');const list=readInvoices(storage);const index=list.findIndex(x=>x.id===invoice.id);if(index<0&&list.length>=30)throw Error('الأرشيف يحتوي 30 فاتورة. حمّل الفواتير القديمة ثم احذف واحدة قبل إصدار فاتورة جديدة.');if(index<0)list.unshift(invoice);else list[index]=invoice;try{(storage||localStorage).setItem(KEY,JSON.stringify(list));}catch{throw Error('تعذّر الحفظ على هذا الجهاز. اسمح بتخزين بيانات الموقع أو حرّر مساحة، ثم حاول مجددًا.');}return invoice;}
