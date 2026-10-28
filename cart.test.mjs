@@ -9,3 +9,5 @@ const s=cartSummary(clean,p);assert.equal(s.count,5);assert.equal(s.total,2*firs
 const parts=buildWhatsAppParts(clean,p);assert.equal(parts.length,1);const u=new URL(parts[0].url);assert.equal(u.hostname,'wa.me');assert.equal(u.pathname,'/963967765704');assert.equal(u.searchParams.get('text'),parts[0].text);assert(parts[0].text.includes(first.ar));assert(parts[0].text.includes('الكمية: 2'));assert(parts[0].text.includes('305,000'));assert(parts[0].text.includes('لا يشمل التوصيل'));assert.deepEqual(buildWhatsAppParts({},p),[]);
 const all=Object.fromEntries(p.filter(canOrder).map(x=>[x.id,1]));const long=buildWhatsAppParts(all,p);assert(long.length>1);for(const [i,part]of long.entries()){assert(part.text.includes(`الجزء ${i+1} من ${long.length}`));assert(part.url.length<6000);assert.equal(new URL(part.url).pathname,'/963967765704')};for(const id of Object.keys(all))assert.equal(long.filter(x=>x.text.includes(`[${id}]`)).length,1);
 console.log(`PASS: recipient, eligibility, stale/invalid carts, quantity bounds, totals, Arabic URL encoding, and ${long.length}-part orders (${Object.keys(all).length} eligible items).`);
+
+await import('./invoice.test.mjs');
