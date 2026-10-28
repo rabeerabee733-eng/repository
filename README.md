@@ -30,3 +30,9 @@ Invoice HTML and PDF always contain blank paper lines for delivery date, receivi
 ## QA
 
 `node verify.mjs && node cart.test.mjs && node --check dist/app.js && node --check dist/invoice.js` validates catalog search, cart eligibility, quantity bounds, totals, pharmacy validation, snapshots, local storage, WhatsApp message encoding/recipient, PDF structure, paper-only receipt rendering and file-share capability fallbacks. Manual testing uses dummy local data and does not send warehouse messages. The production PDF generator was rendered independently for a single-page and a 219-item order. Cloud browser automation does not provide native file sharing; its unsupported-device fallback was checked. Blob navigation is blocked by its browser policy, so final download/native-share execution requires a supporting user browser.
+
+## Pack controls and mobile basket
+
+Every eligible product has a zero-to-99 pack counter with plus/minus controls in both the card and detail dialog. Updates synchronize in place with the basket and its total; reducing a count to zero removes the item. The basket bar remains visible even when empty and respects the mobile safe area. The basket dialog keeps its close control and total/checkout action visible while the item list and pharmacy form scroll. Draft pharmacy fields survive quantity changes.
+
+The invoice handoff displays two clear actions: open the order directly in the warehouse WhatsApp conversation, and share or download the PDF attachment. Browser file sharing still requires the user to choose the WhatsApp recipient. Direct automatic PDF attachment to a preset WhatsApp chat is not implemented without a messaging service integration.

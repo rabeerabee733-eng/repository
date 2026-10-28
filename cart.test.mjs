@@ -1,4 +1,4 @@
-import assert from 'node:assert/strict';import{readFileSync}from'node:fs';import{WHATSAPP_NUMBER,UNLISTED_IDS,canOrder,normalizeCart,cartSummary,buildWhatsAppParts}from'./dist/cart.mjs';
+import assert from 'node:assert/strict';import{readFileSync}from'node:fs';import{WHATSAPP_NUMBER,UNLISTED_IDS,canOrder,normalizeCart,cartSummary,buildWhatsAppParts,setCartQuantity}from'./dist/cart.mjs';
 const p=JSON.parse(readFileSync('dist/data.json')).products;
 assert.equal(WHATSAPP_NUMBER,'963967765704');assert(UNLISTED_IDS.every(id=>!p.some(x=>x.id===id)));
 const first=p.find(p=>p.en==='Panadol Extra'),second=p.find(p=>p.en==='Contractubex'&&p.nameRaw.includes('20'));
@@ -11,3 +11,5 @@ const all=Object.fromEntries(p.filter(canOrder).map(x=>[x.id,1]));const long=bui
 console.log(`PASS: recipient, eligibility, stale/invalid carts, quantity bounds, totals, Arabic URL encoding, and ${long.length}-part orders (${Object.keys(all).length} eligible items).`);
 
 await import('./invoice.test.mjs');
+
+let stepped=setCartQuantity({},first.id,1,p);stepped=setCartQuantity(stepped,first.id,stepped[first.id]+1,p);assert.equal(stepped[first.id],2);assert.equal(cartSummary(stepped,p).total,80000);const before={...stepped};stepped=setCartQuantity(stepped,first.id,0,p);assert.deepEqual(stepped,{});assert.equal(before[first.id],2);assert.deepEqual(setCartQuantity({},UNLISTED_IDS[0],3,p),{});assert.equal(setCartQuantity({},first.id,120,p)[first.id],99);assert.deepEqual(setCartQuantity(before,first.id,NaN,p),before);assert.deepEqual(setCartQuantity(before,first.id,-1,p),{});console.log('PASS: pack increments/decrements, zero removal, immutable updates, total changes and eligibility bounds.');
