@@ -73,5 +73,36 @@ expands the Student Reports group when the report link is collapsed.
 
 This verifies local report navigation and extraction. It does not verify the
 worker's automatic password/OTP exchange, live WhatsApp delivery, hosted-browser
-connectivity, or plan/homework uploads. Keep production worker activation off
-until the remaining acceptance checks have passed on the intended host.
+connectivity, or plan/homework uploads. The subsequent local activation and its
+remaining acceptance limits are recorded below.
+
+
+## Local activation — 2026-11-08, Amman
+
+The user authorized Karam to use the existing Windows computer for assessment
+processing. The paired local worker was updated and restarted; its Startup
+shortcut remains installed. Only `AJYAL_ASSESSMENT_WORKER_ENABLED` was changed
+to `true` on the existing Karam service. No additional paid infrastructure was
+created. Existing payment approval, eligibility and WhatsApp reply-window rules
+remain in force; this activation does not make customer subscriptions free.
+
+Evidence:
+- Render deployment `dep-dbnpsdjrjlhs739hdd6g` reached `live` with the existing
+  Karam application commit `8fd9133681e4679709fd2e719829b6ef79684450`.
+- The device's worker reported `READY_WAITING_FOR_REQUESTS` at
+  `2026-11-07T21:56:26.412Z`, proving successful authenticated queue polling.
+- Karam's `/health` returned HTTP 200 from the device.
+- An isolated Chrome connectivity check reached the official Ajyal login with
+  HTTP 200 and both login controls visible in 1,051 ms. No credentials were used.
+- 27 targeted worker, OTP, cancellation, roster and document-delivery tests passed.
+- An isolated generator check produced both PDFs for 21 synthetic students in
+  approximately 6 seconds in the development runtime. This is not a measurement
+  of the customer's computer or of the complete live workflow.
+
+Operational scope: Ajyal login and roster extraction run on Windows; document
+rendering and WhatsApp delivery use the existing Karam service and the original
+cover fonts. The worker handles one eligible request at a time. Windows must
+remain signed in, awake and online. The teacher supplies a fresh OTP when asked.
+The first complete live password/OTP-to-WhatsApp transaction still needs an actual
+eligible teacher request. Do not claim that such delivery has already passed.
+Plan/homework upload automation remains disabled.
