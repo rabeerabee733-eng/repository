@@ -96,6 +96,7 @@ export function createRunner({secret=process.env.RUNNER_API_KEY,driver=browserDr
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const runner=createRunner();runner.server.listen(Number(process.env.PORT||10000),'0.0.0.0',()=>console.log('Ajyal runner listening'));
+  if(process.env.AJYAL_CONNECTIVITY_PROBE==='true')void import('./connectivity-probe.mjs').then(m=>m.runConnectivityProbe()).catch(()=>console.log(JSON.stringify({event:'ajyal_connectivity',error:'PROBE_FAILED'})));
   for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>runner.close().finally(()=>process.exit(0)));
 }
 
