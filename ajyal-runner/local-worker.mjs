@@ -58,4 +58,4 @@ async function run(job){
  finally{job.password='';clearInterval(health);await browser?.close().catch(()=>{});browser=null;}
 }
 log('WORKER_STARTED');
-while(!closing){try{const {job}=await api('claim');if(job)await run(job);}catch(error){log(error.code==='WORKER_DISABLED'?'AWAITING_ACTIVATION':'SERVER_UNAVAILABLE');}await delay(15000);}
+while(!closing){try{const {job}=await api('claim');if(job){log('PROCESSING_REQUEST');await run(job);}else log('READY_WAITING_FOR_REQUESTS');}catch(error){log(error.code==='WORKER_DISABLED'?'AWAITING_ACTIVATION':error.code==='UNAUTHORIZED'?'PAIRING_REJECTED':'SERVER_UNAVAILABLE');}await delay(15000);}
