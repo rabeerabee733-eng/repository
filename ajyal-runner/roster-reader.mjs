@@ -38,7 +38,16 @@ export function joinReportPages(pages,teacherName,expected={}){
 const delay=ms=>new Promise(r=>setTimeout(r,ms));
 async function until(fn,stop,timeout=20000){const end=Date.now()+timeout;while(Date.now()<end){if(stop())fail('CANCELLED');const value=await fn().catch(()=>null);if(value)return value;await delay(200);}fail('REPORT_TIMEOUT');}
 export async function readRoster(page,expected={},stopped=()=>false){
-  await page.goto(REPORT_URL,{waitUntil:'domcontentloaded',timeout:45000});
+  // Ajyal issues its report destination through the authorized menu. Opening a
+  // bare report URL can redirect a valid session to NotAuthorized.aspx.
+  if(new URL(page.url()).pathname!==new URL(REPORT_URL).pathname){
+    if(new URL(page.url()).pathname!=='/emis/EduWaveMenu/ReportsMenuPriv.aspx')await page.getByRole('link',{name:'التقارير',exact:true}).first().click({noWaitAfter:true});
+    const reportLink=page.getByRole('link',{name:'كشف بأسماء الطلبة',exact:true});
+    if(await reportLink.count()===0)await page.getByText('تقارير الطلبة',{exact:true}).first().click({noWaitAfter:true});
+    await reportLink.first().click({noWaitAfter:true});
+    await page.waitForURL(url=>url.pathname===new URL(REPORT_URL).pathname,{timeout:30000});
+    await page.waitForLoadState('domcontentloaded');
+  }
   if(new URL(page.url()).pathname!==new URL(REPORT_URL).pathname)fail('REPORT_LOGIN_REQUIRED');
   const identity=await page.locator(REPORT_FIELDS.identity).innerText();
   const teacherName=identity.split('\n')[0].trim();

@@ -61,3 +61,17 @@ covers worker token authorization, lease expiry, cancellation, class matching,
 one-use OTPs, complete roster validation and delivery to the originating sender.
 Passing these tests is not evidence that a live WhatsApp delivery or Ajyal upload
 has occurred. Record actual acceptance separately before advertising readiness.
+
+## Live roster acceptance — 2026-11-08, Amman
+
+An authorized teacher signed in manually on the local Windows acceptance browser.
+The program followed Reports > Student Reports > Student Names, selected the
+available class/section and validated a complete 21-student roster for grade 1.
+The bare report URL had redirected to NotAuthorized.aspx; using the account's
+normal report-menu links succeeded. The reader now follows those links and
+expands the Student Reports group when the report link is collapsed.
+
+This verifies local report navigation and extraction. It does not verify the
+worker's automatic password/OTP exchange, live WhatsApp delivery, hosted-browser
+connectivity, or plan/homework uploads. Keep production worker activation off
+until the remaining acceptance checks have passed on the intended host.
