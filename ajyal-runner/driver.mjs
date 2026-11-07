@@ -1,5 +1,5 @@
 import {LOGIN,verifiedWorkflows,setupMessage} from './workflows.mjs';
-import {officialUrl,uploadItems} from './engine.mjs';
+import {officialUrl,loginUrl,uploadItems} from './engine.mjs';
 
 export async function browserDriver(job, update, stopped) {
   const {chromium} = await import('playwright');
@@ -39,7 +39,7 @@ export async function browserDriver(job, update, stopped) {
     if (!stopped()) throw new Error('LOGIN_NOT_CONFIRMED');
   };
   job.submitOtp = async code => {
-    if (!officialUrl(page.url()) || !(await visible(LOGIN.otp))) throw new Error('OTP_NOT_REQUESTED');
+    if (!loginUrl(page.url()) || !(await visible(LOGIN.otp))) throw new Error('OTP_NOT_REQUESTED');
     update('checking_otp','جارٍ تدقيق رمز التحقق في أجيال.');
     const previousExpiry=job.otpExpires;
     try {
@@ -60,10 +60,11 @@ export async function browserDriver(job, update, stopped) {
   };
   update('connecting','جارٍ فتح منصة أجيال وإدخال بيانات الحساب.');
   await page.goto(LOGIN.url,{waitUntil:'domcontentloaded',timeout:45000});
-  if (!officialUrl(page.url())) throw new Error('WRONG_ORIGIN');
+  if (!loginUrl(page.url())) throw new Error('WRONG_ORIGIN');
   await page.locator(LOGIN.username).fill(job.credentials.username);
   await page.locator(LOGIN.password).fill(job.credentials.password);
   job.credentials=null;
   await page.locator(LOGIN.submit).click();
   await observe();
 }
+

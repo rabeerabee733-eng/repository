@@ -1,6 +1,12 @@
 export const ORIGIN = 'https://ajyal.moe.gov.jo';
+// Both exact origins were observed during the supervised Ajyal trial. The
+// sign-in form remains confined to ORIGIN; course resources live on LMS_ORIGIN.
+export const LMS_ORIGIN = 'https://ajyallms.moe.gov.jo';
 export const clean = value => String(value ?? '').trim().replace(/\s+/g, ' ');
 export function officialUrl(value) {
+  try { const u = new URL(value); return [ORIGIN, LMS_ORIGIN].includes(u.origin) && !u.username && !u.password; } catch { return false; }
+}
+export function loginUrl(value) {
   try { const u = new URL(value); return u.origin === ORIGIN && !u.username && !u.password; } catch { return false; }
 }
 export function verifiedMatch(actual, expected, keys) {
@@ -27,12 +33,15 @@ export async function uploadItems({page, job, workflows, update, isStopped}) {
     if (existing) throw new Error('EXISTING_FILE_REVIEW');
     if (isStopped()) return;
     await assertDestination();
+    if (isStopped()) return;
     update('uploading', 'جارٍ رفع الملف والتحقق من حفظه.');
     job.mayHaveWritten = true;
     await adapter.uploadAndSave(page, item, job.files.get(item.id));
     const evidence = await adapter.verifySavedAfterReload(page, item, expected);
+    if (isStopped()) return;
     if (!evidence?.saved || !officialUrl(evidence.url) || !evidence.recordId || !evidence.verifiedAt ||
         !verifiedMatch(evidence, {filename:item.filename,...expected}, ['filename',...Object.keys(expected)])) throw new Error('SAVE_UNCONFIRMED');
     job.results.push({id:item.id,status:'completed',note:'تم التحقق من سجل الملف بعد إعادة تحميل وجهته في أجيال.',evidence:{...evidence,adapterVersion:adapter.version}});
   }
 }
+

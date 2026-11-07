@@ -5,7 +5,9 @@ COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --chown=pwuser:pwuser *.mjs ./
 USER pwuser
+RUN npm test
 ENV NODE_ENV=production
 EXPOSE 10000
 ENTRYPOINT ["/usr/bin/tini", "--"]
 CMD ["node", "server.mjs"]
+
