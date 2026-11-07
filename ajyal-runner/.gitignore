@@ -1,0 +1,6 @@
+node_modules/
+worker-config.json
+worker-token.dpapi
+worker.lock
+worker-status.log
+worker-error.log
