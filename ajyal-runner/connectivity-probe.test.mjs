@@ -1,4 +1,5 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {probeBrowser} from './connectivity-probe.mjs';
+import test from 'node:test';import assert from 'node:assert/strict';import {probeBrowser,probeHttps} from './connectivity-probe.mjs';
+test('network diagnostic refuses arbitrary destinations',()=>{assert.throws(()=>probeHttps('http://localhost'),/PROBE_TARGET_NOT_ALLOWED/);});
 test('connectivity checks the fixed official login without filling or submitting anything',async()=>{
  let closed=0;const page={goto:async url=>{assert.equal(url,'https://ajyal.moe.gov.jo/emis/login.aspx');return {status:()=>200};},url:()=> 'https://ajyal.moe.gov.jo/emis/login.aspx',locator:()=>({isVisible:async()=>true})};
  const result=await probeBrowser({launch:async()=>({newContext:async()=>({route:async()=>{},newPage:async()=>page}),close:async()=>closed++})});

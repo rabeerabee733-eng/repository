@@ -18,17 +18,20 @@ export async function probeBrowser(chromium){
   }catch(error){return {stage:'browser',error:error.name==='TimeoutError'?'TIMEOUT':String(error.message||'').match(/net::(ERR_[A-Z_]+)/)?.[1]||'BROWSER_ERROR',elapsedMs:Date.now()-start};}
   finally{await browser?.close().catch(()=>{});}
 }
-export function probeHttps(){return new Promise(resolve=>{
-  const start=Date.now();let settled=false;
-  const finish=result=>{if(settled)return;settled=true;clearTimeout(deadline);resolve({stage:'https',...result,elapsedMs:Date.now()-start});};
-  const req=https.get(LOGIN.url,{timeout:15000},res=>{finish({status:res.statusCode});res.destroy();});
+export function probeHttps(url=LOGIN.url){
+ if(![LOGIN.url,'https://render.com'].includes(url))throw Error('PROBE_TARGET_NOT_ALLOWED');
+ return new Promise(resolve=>{
+  const start=Date.now();let settled=false;const phase={dns:false,tcp:false,tls:false};
+  const finish=result=>{if(settled)return;settled=true;clearTimeout(deadline);resolve({stage:url===LOGIN.url?'https':'https-control',...result,...phase,elapsedMs:Date.now()-start});};
+  const req=https.get(url,{timeout:15000},res=>{finish({status:res.statusCode});res.destroy();});
+  req.on('socket',socket=>{socket.on('lookup',error=>{phase.dns=!error;});socket.on('connect',()=>{phase.tcp=true;});socket.on('secureConnect',()=>{phase.tls=true;});});
   const deadline=setTimeout(()=>req.destroy(Object.assign(Error('TIMEOUT'),{code:'TIMEOUT'})),15000);
   req.on('timeout',()=>req.destroy(Object.assign(Error('TIMEOUT'),{code:'TIMEOUT'})));
   req.on('error',e=>finish({error:/^[A-Z_]{1,60}$/.test(e.code||'')?e.code:'NETWORK_ERROR'}));
 });}
 export async function runConnectivityProbe(){
   const {chromium}=await import('playwright');
-  const results=await Promise.all([probeHttps(),probeBrowser(chromium)]);
+  const results=await Promise.all([probeHttps(),probeHttps('https://render.com'),probeBrowser(chromium)]);
   for(const result of results)console.log(JSON.stringify({event:'ajyal_connectivity',at:new Date().toISOString(),...result}));
   return results;
 }
