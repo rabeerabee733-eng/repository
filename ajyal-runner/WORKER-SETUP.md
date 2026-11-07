@@ -20,6 +20,11 @@ the only class/section (or refuses ambiguity), reads every report page, checks
 continuous sequence numbers and reports the roster count and hash. National IDs
 are discarded before any report data leaves the parser.
 
+The acceptance window remains open for safe retries for 30 minutes. Its stdin
+commands are `status`, `navigation`, `open-reports`, `report`, and `close`.
+Diagnostics expose only login-stage booleans, URL paths and the three report
+navigation links; they never dump page bodies, national IDs or form values.
+
 After verified extraction and server deployment, set
 `AJYAL_ASSESSMENT_WORKER_ENABLED=true`. Run `start-worker.ps1` and
 `install-startup.ps1` to start now and again at Windows login. No admin account,

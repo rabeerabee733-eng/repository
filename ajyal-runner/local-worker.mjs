@@ -46,7 +46,9 @@ async function run(job){
    const body=await page.locator('body').innerText();if(/verify you are human|captcha|تحقق من أنك إنسان/i.test(body))fail('CAPTCHA_REQUIRED');
    await delay(300);
   }
-  if(!loggedIn||invalid)fail('LOGIN_FAILED');await api('progress',lease);
+  if(!loggedIn||invalid)fail('LOGIN_FAILED');
+  await page.waitForURL(url=>url.pathname.endsWith('/HomePage.aspx'),{timeout:30000});
+  await page.waitForLoadState('load');await api('progress',lease);
   const roster=await readRoster(page,job.expected,()=>invalid||closing);
   await api('progress',lease);
   // Repeating completion is safe if its acknowledgement was lost.
